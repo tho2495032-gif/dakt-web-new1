@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Điều Khiển Ruộng Muối (Firebase)</title> <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1 id="header-title">Dữ Liệu Cảm Biến</h1>
+    </header>
+
+    <div class="container">
+        
+        <div id="page-data" class="page active">
+
+            <div class="card main-display-card weather-focused-split">
+                <div class="weather-half current-weather">
+                    <span class="weather-label">HIỆN TẠI</span>
+                    <div class="weather-icon" id="current-weather-icon">☀️</div>
+                    <div class="main-description" id="current-weather-value">Trời ráo</div>
+                </div>
+                <div class="vertical-divider"></div>
+                <div class="weather-half forecast-weather">
+                    <span class="weather-label">DỰ BÁO (ML)</span>
+                    <div class="weather-icon" id="forecast-icon">☀️</div>
+                    <div class="main-description" id="forecast-value">Đang tải...</div>
+                </div>
+            </div>
+            
+            <div class="card details-grid-with-embedded-charts"> 
+                
+                <div class="detail-item-with-chart">
+                    <div class="detail-info"> <span class="detail-label">💧 Mực nước</span> <span class="detail-value" id="muc-nuoc-value">-- cm</span> </div>
+                    <div class="mini-chart-container"> 
+                        <canvas id="mucNuocChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="detail-item-with-chart">
+                    <div class="detail-info"> <span class="detail-label">🌡️ Nhiệt độ</span> <span class="detail-value" id="nhiet-do-value">-- °C</span> </div>
+                    <div class="mini-chart-container">
+                        <canvas id="nhietDoChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="detail-item-with-chart">
+                    <div class="detail-info"> <span class="detail-label">💧 Độ ẩm</span> <span class="detail-value" id="do-am-value">-- %</span> </div>
+                    <div class="mini-chart-container">
+                        <canvas id="doAmChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="detail-item-with-chart">
+                    <div class="detail-info"> <span class="detail-label">🌀 Áp suất</span> <span class="detail-value" id="ap-suat-value">-- hPa</span> </div>
+                    <div class="mini-chart-container">
+                        <canvas id="apSuatChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-info"> <span class="detail-label">🚱 Bơm</span> <span class="detail-value" id="pump-status-auto">TẮT</span> </div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-info"> <span class="detail-label">🚨 Báo động</span> <span class="detail-value" id="alarm-status">TẮT</span> </div>
+                </div>
+            </div>
+            
+            <div class="card card-time-location">
+                <div class="time-display" id="current-time">--:--:--</div>
+                <div class="date-display" id="current-date">Thứ..., ngày .../.../...</div>
+                <div class="location-display">📍 TP. Hồ Chí Minh, Việt Nam</div>
+            </div>
+        </div> 
+        
+        <div id="page-control" class="page">
+           <div class="card card-mode"> <h2>CHẾ ĐỘ HOẠT ĐỘNG (Lệnh tới Field 8)</h2> <p>Hệ thống đang ở chế độ: <span id="mode-status">TỰ ĐỘNG</span></p> <div class="button-group"> <button class="btn-control btn-auto" id="btn-mode-auto">CHUYỂN SANG TỰ ĐỘNG</button> <button class="btn-control btn-manual" id="btn-mode-manual">CHUYỂN SANG THỦ CÔNG</button> </div> </div>
+           <div class="card card-activity-log"> <h2>📜 Nhật Ký Hoạt Động</h2> <ul class="log-list" id="activity-log-list"> <li class="log-item auto"> <span class="log-time">[--:--]</span> <span class="log-desc">Đang chờ sự kiện...</span> </li> </ul> </div>
+           <div class="card" id="manual-controls"> <h2>🕹️ Điều Khiển Thủ Công</h2> <p>Bơm Nước (Gửi lệnh 1=Bật, 2=Tắt tới Field 8)</p> <div class="button-group"> <button class="btn-control" id="btn-bom-on">BẬT BƠM</button> <button class="btn-control btn-off" id="btn-bom-off">TẮT BƠM</button> </div> <p>Bạt Che (Gửi lệnh 1=Đóng, 2=Mở, 0=Dừng tới Field 7)</p> <div class="button-group"> <button class="btn-control btn-action" id="btn-bat-dong">ĐÓNG BẠT (M1)</button> <button class="btn-control" id="btn-bat-mo">MỞ BẠT (M2)</button> <button class="btn-control btn-off" id="btn-bat-dung">DỪNG BẠT</button> </div> <p>Báo Động (Gửi lệnh 3=Bật, 4=Tắt tới Field 8)</p> <div class="button-group"> <button class="btn-control btn-action" id="btn-alarm-on">BẬT CÒI/ĐÈN</button> <button class="btn-control btn-off" id="btn-alarm-off">TẮT CÒI/ĐÈN</button> </div> </div>
+        </div> 
+
+        <div id="page-info" class="page">
+           <div class="card card-logo-header"> <img src="Logo_IUH.jpg" alt="Logo Trường IUH" class="logo-iuh"> <img src="Logo_FET.jpg" alt="Logo Khoa FET" class="logo-fet"> </div> <div class="card card-project-name"> <h2>TÊN DỰ ÁN</h2> <p>Hệ Thống Giám Sát Dự Báo Thời Tiết & Điều Khiển Ruộng Muối Thông Minh</p> </div> <div class="card card-project-name"> <h2>GV HƯỚNG DẪN</h2> <p>TS.Nguyễn Anh Vinh</p> </div> <div class="card"> <div class="info-inline-group"> <h2>Lớp:</h2> <p>DHDTMT18ATT</p> </div> <h2>Nhóm Thực Hiện</h2> <ul class="info-list"> <li>22655811 - Trần Thiện Tâm (Trưởng nhóm)</li> <li>22653521 - Ngô Quốc Huy</li> <li>22666301 - Hồ Hiếu Nghĩa</li> <li>22661931 - Lê Hữu Thọ</li> <li>22648591 - Phùng Minh Đức</li> </ul> <div class="team-icons-container"> <div class="team-member"> <img src="A_Tam.png" alt="Trần Thiện Tâm"> <span>Thiện Tâm</span> </div> <div class="team-member"> <img src="A_Huy.png" alt="Ngô Quốc Huy"> <span>Quốc Huy</span> </div> <div class="team-member"> <img src="A_Nghia.png" alt="Hồ Hiếu Nghĩa"> <span>Hiếu Nghĩa</span> </div> <div class="team-member"> <img src="Me.png" alt="Lê Hữu Thọ"> <span>Hữu Thọ</span> </div> <div class="team-member"> <img src="A_Duc.png" alt="Phùng Minh Đức"> <span>Minh Đức</span> </div> </div> </div>
+        </div> 
+    </div> 
+    
+    <nav class="tab-bar">
+        <button class="tab-button active" data-page="page-data"> <span class="tab-icon">📊</span> <span class="tab-label">Dữ Liệu</span> </button> 
+        <button class="tab-button" data-page="page-control"> <span class="tab-icon">🕹️</span> <span class="tab-label">Điều Khiển</span> </button> 
+        <button class="tab-button" data-page="page-info"> <span class="tab-icon">👤</span> <span class="tab-label">Thông Tin</span> </button>
+    </nav>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+
+    <script src="script.js"></script>
+</body>
+</html>

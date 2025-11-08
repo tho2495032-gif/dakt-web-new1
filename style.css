@@ -1,0 +1,135 @@
+/* --- PHIÊN BẢN STYLE GỌN GÀNG + TAB BAR + MINI CHARTS + SPLIT VIEW --- */
+
+/* Basic Setup */
+body { font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; margin: 0; padding: 0; font-size: 14px; }
+header { background-color: #007bff; color: white; padding: 10px 15px; text-align: left; font-size: 1.1rem; position: fixed; top: 0; left: 0; width: 100%; z-index: 10; height: 40px; display: flex; align-items: center; }
+header h1 { margin: 0; font-size: 1.1rem; }
+
+/* Container */
+.container { padding: 65px 8px 70px 8px; }
+
+/* General Card */
+.card { background-color: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 8px; padding: 12px 15px; overflow: hidden; }
+.card h2 { margin-top: 0; margin-bottom: 10px; padding-bottom: 0; font-size: 1.05rem; color: #007bff; border-bottom: none; }
+
+/* Special Cards */
+.card-mode { background-color: #e6f7ff; }
+.card-mode #mode-status { font-weight: bold; font-size: 1.1rem; color: #d93025; }
+.btn-auto { background-color: #28a745; }
+.btn-manual { background-color: #28a745; color: #333; }
+.manual-controls-disabled { opacity: 0.5; pointer-events: none; }
+
+/* Layout Elements */
+p, .card p { margin-top: 4px; margin-bottom: 8px; font-size: 0.95rem; }
+
+/* Buttons */
+.button-group { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 5px; margin-top: 15px; }
+.btn-control { flex-grow: 1; padding: 10px 8px; font-size: 0.9rem; font-weight: bold; color: white; background-color: #28a745; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s; }
+.btn-control:hover { opacity: 0.8; }
+.btn-control.btn-off { background-color: #dc3545; }
+.btn-control.btn-action { background-color: #28a745; color: #333; }
+
+/* Tab Bar & Pages */
+.page { display: none; }
+.page.active { display: block; }
+.tab-bar { position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background-color: #ffffff; display: flex; border-top: 1px solid #ddd; box-shadow: 0 -2px 5px rgba(0,0,0,0.05); z-index: 10; }
+.tab-button { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; background: none; border: none; padding: 5px 0; font-size: 0.75rem; color: #888; cursor: pointer; }
+.tab-button .tab-icon { font-size: 1.5rem; }
+.tab-button.active { color: #007bff; }
+
+/* Info Page Layout */
+.card-logo-header { display: flex; justify-content: space-between; align-items: center; background-color: #f0f0f0; padding: 10px 15px; }
+.logo-iuh { max-width: 260px; height: 160px; }
+.logo-fet { max-width: 280px; height: 160px; }
+.card-project-name { text-align: center; }
+.card-project-name h2 { margin-bottom: 4px; }
+.card-project-name p { margin-bottom: 0; }
+.info-list { padding-left: 20px; margin: 0; }
+.info-list li { margin-bottom: 5px; }
+.info-inline-group { display: flex; align-items: baseline; gap: 8px; padding-bottom: 5px; margin-bottom: 15px; border-bottom: 1px solid #eee; }
+.info-inline-group h2 { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+.info-inline-group p { margin-bottom: 0; font-size: 0.95rem; }
+.team-icons-container { display: flex; justify-content: space-around; flex-wrap: wrap; padding-top: 15px; margin-top: 15px; border-top: 1px solid #eee; }
+.team-member { display: flex; flex-direction: column; align-items: center; flex-basis: 60px; }
+.team-member img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid #ddd; }
+.team-member span { font-size: 0.75rem; color: #555; margin-top: 5px; text-align: center; }
+
+/* ============================================== */
+/* --- CSS MỚI: DATA TAB (SPLIT VIEW) --- */
+/* ============================================== */
+
+/* 1. Thẻ Hiển thị Chính (SPLIT) */
+.main-display-card.weather-focused-split {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    padding: 15px 10px; /* Giảm padding */
+    border-radius: 12px;
+    margin-bottom: 8px;
+    display: flex; /* BẬT FLEXBOX */
+    justify-content: space-around; /* Căn 2 nửa */
+    align-items: center;
+}
+.weather-half {
+    flex: 1; /* Mỗi nửa chiếm 50% */
+    text-align: center;
+    padding: 10px 5px;
+}
+.weather-half .weather-label {
+    font-size: 0.7rem; /* Chữ "HIỆN TẠI" / "DỰ BÁO" */
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.8;
+    display: block;
+    margin-bottom: 8px;
+}
+.weather-half .weather-icon {
+    font-size: 3.0rem; /* Giảm cỡ icon */
+    line-height: 1;
+}
+.weather-half .main-description {
+    font-size: 1.1rem; /* Giảm cỡ chữ mô tả */
+    font-weight: 500;
+    margin-top: 8px;
+}
+/* Dấu ngăn cách dọc */
+.vertical-divider {
+    width: 1px;
+    background-color: #fff;
+    opacity: 0.3;
+    align-self: stretch; /* Kéo dài bằng chiều cao thẻ */
+}
+
+/* 2. Lưới Chi tiết (Giữ nguyên từ trước) */
+.details-grid-with-embedded-charts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; margin-bottom: 8px; }
+.detail-item-with-chart,
+.detail-item { background-color: #f9f9f9; padding: 8px 10px; border-radius: 6px; display: flex; flex-direction: column; border: 1px solid #eee; }
+.detail-info { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; width: 100%; }
+.detail-label { font-size: 0.75rem; color: #555; margin-bottom: 0; white-space: nowrap; }
+.detail-value { font-size: 1.0rem; font-weight: bold; color: #000; text-align: right; white-space: nowrap; }
+
+/* 3. Mini Chart Container (Giữ nguyên từ trước) */
+.mini-chart-container { position: relative; width: 170px; height: 100px; overflow: hidden; background-color: #eee; border-radius: 4px; margin-top: auto; }
+.mini-chart-container iframe { position: absolute; top: 0; left: 0; width: 250%; height: 250%; border: none; transform: scale(0.5); transform-origin: top left; pointer-events: none; }
+.iframe-placeholder-small { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #bbb; font-size: 0.7rem; text-align: center; padding: 5px; }
+
+/* 4. Hide old/unused classes (Giữ nguyên) */
+#page-data .card-row,
+#page-data .card-warning,
+#page-data .details-grid { display: none; }
+
+/* 5. Thẻ Thời gian & Địa điểm (Giữ nguyên) */
+.card-time-location { background-color: #fff; text-align: center; padding: 10px; }
+.time-display { font-size: 1.8rem; font-weight: 600; color: #007bff; margin-bottom: 3px; }
+.date-display { font-size: 0.85rem; color: #555; margin-bottom: 5px; }
+.location-display { font-size: 0.85rem; color: #777; }
+
+/* 6. Thẻ Nhật ký (Giữ nguyên) */
+.card-activity-log { background-color: #333; color: #eee; }
+.card-activity-log h2 { color: #ffc107; border-bottom: 1px solid #555; }
+.log-list { list-style: none; padding: 0; margin: 0; max-height: 150px; overflow-y: auto; font-family: monospace; }
+.log-item { padding: 6px 2px; border-bottom: 1px solid #444; font-size: 0.85rem; }
+.log-item:last-child { border-bottom: none; }
+.log-item .log-time { color: #999; margin-right: 8px; }
+.log-item.auto .log-desc { color: #81c784; }
+.log-item.manual .log-desc { color: #ffb74d; }
