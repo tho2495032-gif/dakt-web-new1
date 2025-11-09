@@ -137,9 +137,20 @@ sensorsRef.on('value', (snapshot) => {
 
     console.log("Web App nhận được dữ liệu:", data);
     
+    let timeLabel;
+if (data.datetime) {
+    // Nếu có trường datetime (ví dụ: "09/11/2025 00:30:01")
+    // Chúng ta tách chuỗi này ra bằng khoảng trắng và lấy phần thứ 2 (là giờ)
+    timeLabel = data.datetime.split(' ')[1]; // Kết quả sẽ là "00:30:01"
+} else {
+    // Dự phòng nếu lỡ ESP quên gửi datetime
     const timestamp = data.timestamp ? data.timestamp * 1000 : Date.now();
     const now = new Date(timestamp);
-    const timeLabel = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
+    // Thêm số 0 ở đầu nếu giờ/phút/giây nhỏ hơn 10 nhìn cho đẹp
+    timeLabel = String(now.getHours()).padStart(2, '0') + ':' + 
+                String(now.getMinutes()).padStart(2, '0') + ':' + 
+                String(now.getSeconds()).padStart(2, '0');
+}
 
     try {
         // Cập nhật các giá trị Text
@@ -325,4 +336,5 @@ function addLog(message, type) {
     if (danhSachLog.children.length > 15) {
         danhSachLog.removeChild(danhSachLog.lastChild);
     }
+
 }
