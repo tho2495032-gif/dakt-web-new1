@@ -81,23 +81,36 @@ function createChart(ctx, label, color) {
 }
 
 // --- HÀM CẬP NHẬT BIỂU ĐỒ ---
+// --- HÀM CẬP NHẬT BIỂU ĐỒ (Đã sửa lỗi trùng lặp) ---
 function updateChart(chart, label, value) {
-    if (!chart) return; // Nếu biểu đồ chưa được tạo, bỏ qua
+    if (!chart) return;
     
+    // 1. Kiểm tra dữ liệu hợp lệ
     const numValue = parseFloat(value);
-    if (isNaN(numValue)) {
-        console.warn(`Giá trị không hợp lệ cho biểu đồ ${chart.data.datasets[0].label}:`, value);
-        return;
+    if (isNaN(numValue)) return;
+
+    // 2. CHẶN TRÙNG LẶP: Kiểm tra nếu nhãn thời gian mới (label) 
+    // giống hệt nhãn thời gian cuối cùng đã vẽ.
+    if (chart.data.labels.length > 0) {
+        const lastLabel = chart.data.labels[chart.data.labels.length - 1];
+        if (label === lastLabel) {
+            // Nếu trùng giờ/phút/giây, ta chỉ CẬP NHẬT lại giá trị cuối cùng
+            // thay vì vẽ thêm điểm mới chồng lên.
+            chart.data.datasets[0].data[chart.data.datasets[0].data.length - 1] = numValue;
+            chart.update('none');
+            return; // Thoát hàm, không vẽ thêm
+        }
     }
 
+    // 3. Nếu không trùng, vẽ điểm mới bình thường
     chart.data.labels.push(label);
     chart.data.datasets[0].data.push(numValue);
 
-    if (chart.data.labels.length > 20) { // Giới hạn 20 điểm dữ liệu
+    if (chart.data.labels.length > 20) {
         chart.data.labels.shift();
         chart.data.datasets[0].data.shift();
     }
-    chart.update('none'); // Cập nhật không có hiệu ứng
+    chart.update(); // Xóa 'none' để có hiệu ứng lướt nhẹ cho đẹp
 }
 
 
@@ -338,3 +351,4 @@ function addLog(message, type) {
     }
 
 }
+
