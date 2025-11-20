@@ -34,7 +34,7 @@ const btnModeManual = document.getElementById("btn-mode-manual");
 const modeStatusDisplay = document.getElementById("mode-status");
 const manualControlsDiv = document.getElementById("manual-controls");
 
-// Các nút điều khiển (Đã xóa btnBatDung)
+// Các nút điều khiển
 const btnBomOn = document.getElementById("btn-bom-on");
 const btnBomOff = document.getElementById("btn-bom-off");
 const btnBatDong = document.getElementById("btn-bat-dong");
@@ -97,7 +97,6 @@ function updateChart(chart, label, value) {
 
 // --- 3. HÀM GỬI LỆNH ---
 function publishCommand(commandFeed, message) {
-    // 'message' giờ sẽ là SỐ (0, 1, 2)
     const commandRef = database.ref(`commands/${commandFeed}`);
     commandRef.set(message)
         .then(() => {
@@ -205,34 +204,29 @@ sensorsRef.on('value', (snapshot) => {
     } catch (e) { console.error("Lỗi xử lý dữ liệu Firebase:", e); }
 });
 
-// --- Thêm listener để đồng bộ UI Auto/Manual ---
-const autoModeRef = database.ref('commands/autoMode');
-autoModeRef.on('value', (snapshot) => {
-    const isAuto = snapshot.val();
+// =============================================================
+// --- 5. GÁN HÀNH ĐỘNG CHO CÁC NÚT BẤM (ĐÃ UPDATE) ---
+// =============================================================
+
+// --- QUAN TRỌNG: ĐỔI 'autoMode' -> 'Mode' ---
+const modeRef = database.ref('commands/Mode'); 
+modeRef.on('value', (snapshot) => {
+    const val = snapshot.val();
     // 1 = Auto, 0 = Manual
-    if (isAuto === 1) {
-        setModeUI(true);
-    } else {
-        setModeUI(false); 
-    }
+    setModeUI(val === 1);
 });
 
-
-// =============================================================
-// --- 5. GÁN HÀNH ĐỘNG CHO CÁC NÚT BẤM ---
-// =============================================================
-
-// CHẾ ĐỘ: Gửi 1 (Auto) hoặc 0 (Manual) vào 'commands/autoMode'
 if (btnModeAuto) btnModeAuto.addEventListener("click", () => {
-    publishCommand("autoMode", 1); // Gửi SỐ 1
+    publishCommand("Mode", 1); // Gửi 1 = Auto
     addLog("Chuyển sang chế độ TỰ ĐỘNG", "manual");
 });
 if (btnModeManual) btnModeManual.addEventListener("click", () => {
-    publishCommand("autoMode", 0); // Gửi SỐ 0
+    publishCommand("Mode", 0); // Gửi 0 = Manual
     addLog("Chuyển sang chế độ THỦ CÔNG", "manual");
 });
 
-// BƠM: Gửi 1 (Bật) hoặc 0 (Tắt) vào 'commands/bom'
+
+// BƠM: Gửi 1 (Bật) hoặc 0 (Tắt)
 if (btnBomOn) btnBomOn.addEventListener("click", () => {
     if (!isAutomatic) { publishCommand("bom", 1); addLog("Người dùng BẬT BƠM", "manual"); }
 });
@@ -240,16 +234,23 @@ if (btnBomOff) btnBomOff.addEventListener("click", () => {
     if (!isAutomatic) { publishCommand("bom", 0); addLog("Người dùng TẮT BƠM", "manual"); }
 });
 
-// MOTOR: Gửi 1 (Đóng), 2 (Mở) vào 'commands/motor' (Đã xóa lệnh Dừng)
+// --- QUAN TRỌNG: SỬA LẠI LOGIC MOTOR ---
+// Mở: 1, Đóng: 0
 if (btnBatDong) btnBatDong.addEventListener("click", () => {
-    if (!isAutomatic) { publishCommand("motor", 1); addLog("Người dùng ĐÓNG BẠT", "manual"); }
+    if (!isAutomatic) { 
+        publishCommand("motor", 0); // 0 = Đóng
+        addLog("Người dùng ĐÓNG BẠT", "manual"); 
+    }
 });
 if (btnBatMo) btnBatMo.addEventListener("click", () => {
-    if (!isAutomatic) { publishCommand("motor", 2); addLog("Người dùng MỞ BẠT", "manual"); }
+    if (!isAutomatic) { 
+        publishCommand("motor", 1); // 1 = Mở
+        addLog("Người dùng MỞ BẠT", "manual"); 
+    }
 });
 
 
-// BÁO HIỆU: Gửi 1 (Bật) hoặc 0 (Tắt) vào 'commands/baohieu'
+// BÁO HIỆU: Gửi 1 (Bật) hoặc 0 (Tắt)
 if (btnAlarmOn) btnAlarmOn.addEventListener("click", () => {
     if (!isAutomatic) {
         publishCommand("baohieu", 1);
