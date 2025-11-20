@@ -33,11 +33,12 @@ const btnModeAuto = document.getElementById("btn-mode-auto");
 const btnModeManual = document.getElementById("btn-mode-manual");
 const modeStatusDisplay = document.getElementById("mode-status");
 const manualControlsDiv = document.getElementById("manual-controls");
+
+// Các nút điều khiển (Đã xóa btnBatDung)
 const btnBomOn = document.getElementById("btn-bom-on");
 const btnBomOff = document.getElementById("btn-bom-off");
 const btnBatDong = document.getElementById("btn-bat-dong");
 const btnBatMo = document.getElementById("btn-bat-mo");
-const btnBatDung = document.getElementById("btn-bat-dung");
 const btnAlarmOn = document.getElementById("btn-alarm-on");
 const btnAlarmOff = document.getElementById("btn-alarm-off");
 const danhSachLog = document.getElementById("activity-log-list");
@@ -71,7 +72,7 @@ function createChart(ctx, label, color) {
     });
 }
 
-// --- HÀM CẬP NHẬT BIỂU ĐỒ (Phiên bản của bạn) ---
+// --- HÀM CẬP NHẬT BIỂU ĐỒ ---
 function updateChart(chart, label, value) {
     if (!chart) return;
     const numValue = parseFloat(value);
@@ -90,7 +91,7 @@ function updateChart(chart, label, value) {
         chart.data.labels.shift();
         chart.data.datasets[0].data.shift();
     }
-    chart.update(); // Cập nhật có hiệu ứng
+    chart.update(); 
 }
 
 
@@ -121,7 +122,6 @@ function setModeUI(isAuto) {
 }
 
 // --- 4. HÀM LẮNG NGHE DỮ LIỆU TỪ FIREBASE ---
-// (Giữ nguyên phần lắng nghe 'sensors' của bạn)
 const sensorsRef = database.ref('sensors');
 sensorsRef.on('value', (snapshot) => {
     const data = snapshot.val();
@@ -151,7 +151,6 @@ sensorsRef.on('value', (snapshot) => {
         updateChart(doAmChart, timeLabel, data.doam);
         updateChart(apSuatChart, timeLabel, data.apsuat);
         
-        // (Toàn bộ logic if/else còn lại của bạn giữ nguyên)
         if (pumpStatusAutoDisplay && data.mucnuoc !== undefined) {
              const nguongBat = 1.0, nguongTat = 3.0;
              if (parseFloat(data.mucnuoc) < nguongBat && isAutomatic) {
@@ -206,7 +205,7 @@ sensorsRef.on('value', (snapshot) => {
     } catch (e) { console.error("Lỗi xử lý dữ liệu Firebase:", e); }
 });
 
-// --- PHẦN SỬA: Thêm listener để đồng bộ UI Auto/Manual ---
+// --- Thêm listener để đồng bộ UI Auto/Manual ---
 const autoModeRef = database.ref('commands/autoMode');
 autoModeRef.on('value', (snapshot) => {
     const isAuto = snapshot.val();
@@ -214,25 +213,23 @@ autoModeRef.on('value', (snapshot) => {
     if (isAuto === 1) {
         setModeUI(true);
     } else {
-        setModeUI(false); // Cập nhật UI nếu là 0 hoặc null
+        setModeUI(false); 
     }
 });
 
 
 // =============================================================
-// --- 5. GÁN HÀNH ĐỘNG CHO CÁC NÚT BẤM (ĐÃ SỬA THEO YÊU CẦU) ---
+// --- 5. GÁN HÀNH ĐỘNG CHO CÁC NÚT BẤM ---
 // =============================================================
 
 // CHẾ ĐỘ: Gửi 1 (Auto) hoặc 0 (Manual) vào 'commands/autoMode'
 if (btnModeAuto) btnModeAuto.addEventListener("click", () => {
     publishCommand("autoMode", 1); // Gửi SỐ 1
     addLog("Chuyển sang chế độ TỰ ĐỘNG", "manual");
-    // UI sẽ tự cập nhật khi listener 'autoModeRef' nhận được phản hồi
 });
 if (btnModeManual) btnModeManual.addEventListener("click", () => {
     publishCommand("autoMode", 0); // Gửi SỐ 0
     addLog("Chuyển sang chế độ THỦ CÔNG", "manual");
-    // UI sẽ tự cập nhật khi listener 'autoModeRef' nhận được phản hồi
 });
 
 // BƠM: Gửi 1 (Bật) hoặc 0 (Tắt) vào 'commands/bom'
@@ -243,16 +240,14 @@ if (btnBomOff) btnBomOff.addEventListener("click", () => {
     if (!isAutomatic) { publishCommand("bom", 0); addLog("Người dùng TẮT BƠM", "manual"); }
 });
 
-// MOTOR: Gửi 1 (Đóng), 2 (Mở), 0 (Dừng) vào 'commands/motor'
+// MOTOR: Gửi 1 (Đóng), 2 (Mở) vào 'commands/motor' (Đã xóa lệnh Dừng)
 if (btnBatDong) btnBatDong.addEventListener("click", () => {
     if (!isAutomatic) { publishCommand("motor", 1); addLog("Người dùng ĐÓNG BẠT", "manual"); }
 });
 if (btnBatMo) btnBatMo.addEventListener("click", () => {
     if (!isAutomatic) { publishCommand("motor", 2); addLog("Người dùng MỞ BẠT", "manual"); }
 });
-if (btnBatDung) btnBatDung.addEventListener("click", () => {
-    if (!isAutomatic) { publishCommand("motor", 0); addLog("Người dùng DỪNG BẠT", "manual"); }
-});
+
 
 // BÁO HIỆU: Gửi 1 (Bật) hoặc 0 (Tắt) vào 'commands/baohieu'
 if (btnAlarmOn) btnAlarmOn.addEventListener("click", () => {
@@ -271,7 +266,7 @@ if (btnAlarmOff) btnAlarmOff.addEventListener("click", () => {
 });
 
 
-// --- LOGIC TAB MENU VÀ KHỞI TẠO (Giữ nguyên) ---
+// --- LOGIC TAB MENU VÀ KHỞI TẠO ---
 document.addEventListener("DOMContentLoaded", function() {
 
     // 1. KHỞI TẠO 4 BIỂU ĐỒ
@@ -282,10 +277,9 @@ document.addEventListener("DOMContentLoaded", function() {
         apSuatChart = createChart(document.getElementById('apSuatChart').getContext('2d'), 'Áp suất', '#ffc107');
         console.log("Đã khởi tạo 4 biểu đồ Chart.js");
     } catch (e) {
-        console.error("Lỗi khởi tạo Chart.js. Bạn đã sửa file index.html để dùng <canvas> chưa?", e);
+        console.error("Lỗi khởi tạo Chart.js.", e);
     }
     
-    // (Toàn bộ code cũ của bạn: addLog, chuyển tab, đồng hồ)
     if(danhSachLog) {
         danhSachLog.innerHTML = "";
         addLog("Khởi động hệ thống & kết nối Firebase...", "auto");
@@ -320,10 +314,9 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     updateTime();
     setInterval(updateTime, 1000);
-    // setModeUI(true); // Xóa dòng này, để listener 'autoModeRef' tự quyết định UI
 });
 
-// Hàm addLog (Giữ nguyên)
+// Hàm addLog
 function addLog(message, type) {
     if (!danhSachLog) return;
     const placeholderLog = danhSachLog.querySelector(".log-item");
