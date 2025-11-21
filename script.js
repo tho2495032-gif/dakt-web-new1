@@ -190,7 +190,9 @@ sensorsRef.on('value', (snapshot) => {
                  forecastValue.dataset.lastStatus = "SUN";
              }
          }
-         if (currentIcon && currentValue && data.cbmua !== undefined) {
+         
+         // --- PHẦN ĐÃ SỬA: DÙNG 'muaroi' THAY VÌ 'cbmua' ---
+         if (currentIcon && currentValue && data.muaroi !== undefined) {
              if (data.muaroi == "1") {
                  currentIcon.textContent = "🌧️";
                  currentValue.textContent = "Đang mưa";
@@ -203,10 +205,10 @@ sensorsRef.on('value', (snapshot) => {
 });
 
 // =============================================================
-// --- 5. GÁN HÀNH ĐỘNG CHO CÁC NÚT BẤM (ĐÃ UPDATE) ---
+// --- 5. GÁN HÀNH ĐỘNG CHO CÁC NÚT BẤM ---
 // =============================================================
 
-// --- QUAN TRỌNG: ĐỔI 'autoMode' -> 'Mode' ---
+// --- MODE ---
 const modeRef = database.ref('commands/Mode'); 
 modeRef.on('value', (snapshot) => {
     const val = snapshot.val();
@@ -224,7 +226,7 @@ if (btnModeManual) btnModeManual.addEventListener("click", () => {
 });
 
 
-// BƠM: Gửi 1 (Bật) hoặc 0 (Tắt)
+// --- BƠM ---
 if (btnBomOn) btnBomOn.addEventListener("click", () => {
     if (!isAutomatic) { publishCommand("bom", 1); addLog("Người dùng BẬT BƠM", "manual"); }
 });
@@ -232,8 +234,7 @@ if (btnBomOff) btnBomOff.addEventListener("click", () => {
     if (!isAutomatic) { publishCommand("bom", 0); addLog("Người dùng TẮT BƠM", "manual"); }
 });
 
-// --- QUAN TRỌNG: SỬA LẠI LOGIC MOTOR ---
-// Mở: 1, Đóng: 0
+// --- MOTOR ---
 if (btnBatDong) btnBatDong.addEventListener("click", () => {
     if (!isAutomatic) { 
         publishCommand("motor", 0); // 0 = Đóng
@@ -316,5 +317,3 @@ function addLog(message, type) {
         danhSachLog.removeChild(danhSachLog.lastChild);
     }
 }
-
-
