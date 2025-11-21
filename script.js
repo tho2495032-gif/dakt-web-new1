@@ -191,12 +191,12 @@ sensorsRef.on('value', (snapshot) => {
              }
          }
          
-         // --- PHẦN ĐÃ SỬA: DÙNG 'muaroi' THAY VÌ 'cbmua' ---
+         // --- SỬA LOGIC: 0 LÀ MƯA, 1 LÀ KHÔNG MƯA ---
          if (currentIcon && currentValue && data.muaroi !== undefined) {
-             if (data.muaroi == "1") {
+             if (data.muaroi == "0") { // Nếu giá trị là 0 -> MƯA
                  currentIcon.textContent = "🌧️";
                  currentValue.textContent = "Đang mưa";
-             } else {
+             } else { // Ngược lại (là 1) -> TRỜI RÁO
                  currentIcon.textContent = "☀️";
                  currentValue.textContent = "Trời ráo";
              }
@@ -317,6 +317,7 @@ function addLog(message, type) {
         danhSachLog.removeChild(danhSachLog.lastChild);
     }
 }
+
 
 
 
