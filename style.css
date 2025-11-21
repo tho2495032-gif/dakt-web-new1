@@ -127,9 +127,10 @@ p, .card p { margin-top: 4px; margin-bottom: 8px; font-size: 0.95rem; }
 /* 6. Thẻ Nhật ký (Giữ nguyên) */
 .card-activity-log { background-color: #333; color: #eee; }
 .card-activity-log h2 { color: #ffc107; border-bottom: 1px solid #555; }
-.log-list { list-style: none; padding: 0; margin: 0; max-height: 150px; overflow-y: auto; font-family: monospace; }
+.log-list { list-style: none; padding: 0; margin: 0; max-height: 350px; overflow-y: auto; font-family: monospace; }
 .log-item { padding: 6px 2px; border-bottom: 1px solid #444; font-size: 0.85rem; }
 .log-item:last-child { border-bottom: none; }
 .log-item .log-time { color: #999; margin-right: 8px; }
 .log-item.auto .log-desc { color: #81c784; }
+
 .log-item.manual .log-desc { color: #ffb74d; }
