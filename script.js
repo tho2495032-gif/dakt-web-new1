@@ -39,8 +39,6 @@ const btnBomOn = document.getElementById("btn-bom-on");
 const btnBomOff = document.getElementById("btn-bom-off");
 const btnBatDong = document.getElementById("btn-bat-dong");
 const btnBatMo = document.getElementById("btn-bat-mo");
-const btnAlarmOn = document.getElementById("btn-alarm-on");
-const btnAlarmOff = document.getElementById("btn-alarm-off");
 const danhSachLog = document.getElementById("activity-log-list");
 
 let isAutomatic = true;
@@ -250,22 +248,6 @@ if (btnBatMo) btnBatMo.addEventListener("click", () => {
 });
 
 
-// BÁO HIỆU: Gửi 1 (Bật) hoặc 0 (Tắt)
-if (btnAlarmOn) btnAlarmOn.addEventListener("click", () => {
-    if (!isAutomatic) {
-        publishCommand("baohieu", 1);
-        if (alarmStatusDisplay) alarmStatusDisplay.textContent = "BẬT (Thủ công)";
-        addLog("Người dùng BẬT BÁO ĐỘNG", "manual");
-    }
-});
-if (btnAlarmOff) btnAlarmOff.addEventListener("click", () => {
-    if (!isAutomatic) {
-        publishCommand("baohieu", 0);
-        if (alarmStatusDisplay) alarmStatusDisplay.textContent = "TẮT (Thủ công)";
-        addLog("Người dùng TẮT BÁO ĐỘNG", "manual");
-    }
-});
-
 
 // --- LOGIC TAB MENU VÀ KHỞI TẠO ---
 document.addEventListener("DOMContentLoaded", function() {
@@ -334,4 +316,5 @@ function addLog(message, type) {
         danhSachLog.removeChild(danhSachLog.lastChild);
     }
 }
+
 
