@@ -193,7 +193,7 @@ sensorsRef.on('value', (snapshot) => {
          
          // --- SỬA LOGIC: 0 LÀ MƯA, 1 LÀ KHÔNG MƯA ---
          if (currentIcon && currentValue && data.muaroi !== undefined) {
-             if (data.muaroi == "0") { // Nếu giá trị là 0 -> MƯA
+             if (data.muaroi == "1") { // Nếu giá trị là 0 -> MƯA
                  currentIcon.textContent = "🌧️";
                  currentValue.textContent = "Đang mưa";
              } else { // Ngược lại (là 1) -> TRỜI RÁO
@@ -317,6 +317,7 @@ function addLog(message, type) {
         danhSachLog.removeChild(danhSachLog.lastChild);
     }
 }
+
 
 
 
