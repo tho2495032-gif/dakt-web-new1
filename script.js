@@ -193,7 +193,7 @@ sensorsRef.on('value', (snapshot) => {
              }
          }
          if (currentIcon && currentValue && data.cbmua !== undefined) {
-             if (data.cbmua == "1") {
+             if (data.muaroi == "1") {
                  currentIcon.textContent = "🌧️";
                  currentValue.textContent = "Đang mưa";
              } else {
@@ -334,3 +334,4 @@ function addLog(message, type) {
         danhSachLog.removeChild(danhSachLog.lastChild);
     }
 }
+
