@@ -193,7 +193,7 @@ sensorsRef.on('value', (snapshot) => {
          
          // --- PHẦN ĐÃ SỬA: DÙNG 'muaroi' THAY VÌ 'cbmua' ---
          if (currentIcon && currentValue && data.muaroi !== undefined) {
-             if (data.muaroi == "1") {
+             if (data.muaroi == "0") {
                  currentIcon.textContent = "🌧️";
                  currentValue.textContent = "Đang mưa";
              } else {
@@ -317,3 +317,4 @@ function addLog(message, type) {
         danhSachLog.removeChild(danhSachLog.lastChild);
     }
 }
+
